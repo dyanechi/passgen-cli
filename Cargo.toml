@@ -1,0 +1,16 @@
+[package]
+name = "passgen-cli"
+version = "0.1.0"
+edition = "2021"
+authors = ["dyanechi"]
+about = "KAKAKAKA"
+
+[toolchain]
+channel = "stable"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+
+[dependencies]
+clap = { version = "4.2.0", features = ["derive"] }
+rand = "0.8.5"
