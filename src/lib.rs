@@ -18,6 +18,18 @@ pub enum Mode {
     Alpha,
     Alnum,
     All,
+    Uuid,
+}
+
+#[derive(Debug, Clone, PartialEq, PartialOrd, ValueEnum)]
+pub enum UuidVersion {
+    V2,
+    V3,
+    V4,
+    V5,
+    V6,
+    V7,
+    V8,
 }
 
 pub fn random_string_mode(rng: &mut ThreadRng, mode: &Mode, len: usize, custom_dist: Option<String>) -> String {
@@ -29,7 +41,10 @@ pub fn random_string_mode(rng: &mut ThreadRng, mode: &Mode, len: usize, custom_d
         Mode::Alnum => ALPHANUMERIC.to_owned(),
         Mode::Alpha => format!("{}{}", LOWERCASE, UPPERCASE),
         Mode::All => format!("{}{}", ALPHANUMERIC, SPECIAL_CHARACTERS),
+        Mode::Uuid => format!("{}{}", LOWERCASE, UPPERCASE),
     });
+
+    
 
     random_string(rng, len, &charset)
 }
@@ -52,4 +67,16 @@ fn random_string(rng: &mut ThreadRng, len: usize, charset: &str) -> String {
     (0..len).map(
         |_| (charset.as_bytes()[rng.gen_range(0..charset.len())] as char).to_string()
     ).collect::<Vec<_>>().concat().to_owned()
+}
+
+pub fn random_uuid(uuid_ver: UuidVersion) -> String {
+    match uuid_ver {
+        UuidVersion::V2 => todo!(),
+        UuidVersion::V3 => todo!(),
+        UuidVersion::V4 => todo!(),
+        UuidVersion::V5 => todo!(),
+        UuidVersion::V6 => todo!(),
+        UuidVersion::V7 => todo!(),
+        UuidVersion::V8 => todo!(),
+    }
 }

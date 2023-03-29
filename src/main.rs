@@ -1,5 +1,5 @@
 use clap::Parser;
-use passgen_cli::{Mode, random_string_mode, random_string_flags};
+use passgen_cli::{Mode, UuidVersion, random_string_mode, random_string_flags, random_uuid};
 use rand::thread_rng;
 
 #[derive(Parser, Debug)]
@@ -28,6 +28,9 @@ struct Cli {
 
     #[arg(short, long, default_value = None)]
     custom: Option<String>,
+
+    #[arg(short, long, value_enum, default_value = None)]
+    uuid: Option<UuidVersion>,
 }
 
 fn main() {
@@ -37,7 +40,12 @@ fn main() {
     let mode_flags = (args.numeric, args.upper, args.lower, args.special);
     let mut r_str = match args.mode {
         Some(mode) => random_string_mode(&mut rng, &mode, args.length, args.custom),
-        None => random_string_flags(&mut rng, mode_flags, args.length, args.custom)
+        None => {
+            if let Some(uuid_ver) = args.uuid { random_uuid(uuid_ver) }
+            else {
+                random_string_flags(&mut rng, mode_flags, args.length, args.custom)
+            }
+        }
     };
 
     if let Some(pre) = &args.pre { r_str = pre.to_owned() + &r_str; }
