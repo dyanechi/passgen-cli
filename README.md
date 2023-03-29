@@ -1,7 +1,7 @@
 # passgen-cli - rust-based cli password generator
 
 ## Installation
-To install cli directly from this git repository, you can use *cargo install*:
+To install cli directly from this git repository, you can use **cargo install**:
 ```bash
 cargo install --git https://github.com/dyanechi/passgen-cli
 ```
