@@ -56,7 +56,7 @@ pub enum UuidCommand {
 
 #[derive(Debug, Default, Clone, Args)]
 pub struct V5Args {
-    #[arg(short='d', long, default_value = "rust-lang.org")]
+    #[arg(short='d', long)]
     domain: String,
 }
 
