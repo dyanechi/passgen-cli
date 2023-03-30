@@ -1,13 +1,20 @@
 use super::*;
 
 #[derive(Args, Clone, Debug)]
-pub struct HashCmd {
+pub struct HashArgs {
     #[arg(short, long)]
-    func: Option<HashFunction>
+    func: Option<HashFunction>,
+}
+
+#[derive(Args, Clone, Debug)]
+pub struct HashCmd {
+
+    #[clap(flatten)]
+    args: HashArgs,
 }
 impl HashCmd {
     pub fn run(self) {
-
+        let args = self.args;
     }
 }
 

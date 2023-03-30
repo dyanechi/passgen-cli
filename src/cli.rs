@@ -1,7 +1,7 @@
 use clap::{Parser, Args, Subcommand, ValueEnum};
 use rand::thread_rng;
 
-use crate::{commands::{uuid::{UuidCommand, random_uuid}, hash::HashCmd}, UuidCmd, StdCmd, CustomCmd};
+use crate::{commands::{uuid::{UuidCommand, random_uuid}, hash::HashCmd, std::StdArgs}, UuidCmd, StdCmd, CustomCmd};
 
 #[derive(Parser, Debug)]
 #[command(
@@ -24,9 +24,10 @@ impl Cli {
         let cli = Cli::parse();
         let mut rng = thread_rng();
     
+        let args = cli.args;
         let commands = match cli.commands {
             Some(commands) => commands,
-            None => CliCommands::Standard(Default::default()),
+            None => CliCommands::Standard(StdCmd::from(args.std_args)),
         };
     
         match commands {
@@ -40,7 +41,8 @@ impl Cli {
 
 #[derive(Args, Clone, Debug, Default)]
 pub struct CliArgs {
-    
+    #[clap(flatten)]
+    std_args: Option<StdArgs>,
 }
 
 #[derive(Subcommand, Clone, Debug)]
