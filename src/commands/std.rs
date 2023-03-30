@@ -9,22 +9,8 @@ const UPPERCASE: &'static str = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 const SPECIAL_CHARACTERS: &'static str = "!@#$%^&*()_-+";
 const ALPHANUMERIC: &'static str = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-const DEFAULT_LEN: usize = 16;
-
-#[derive(Debug, Clone, PartialEq, PartialOrd, ValueEnum)]
-pub enum Mode {
-    Num,
-    Lower,
-    Upper,
-    Special,
-    Alpha,
-    Alnum,
-    All,
-    Uuid,
-}
-
 #[derive(Args, Clone, Debug, Default)]
-pub struct StdArgs {
+pub struct StdCmd {
     #[arg(short='L', long, default_value_t = 16)]
     length: usize,
 
@@ -49,29 +35,9 @@ pub struct StdArgs {
     #[arg(short, long, default_value = None)]
     custom: Option<String>,
 }
-
-#[derive(Args, Clone, Debug, Default)]
-pub struct StdCmd {
-    #[clap(flatten)]
-    args: StdArgs,
-}
-impl From<Option<StdArgs>> for StdCmd {
-    fn from(args: Option<StdArgs>) -> Self {
-        let mut instance = Self::default();
-        instance.args = args.unwrap_or_default();
-        instance
-    }
-}
-impl From<StdArgs> for StdCmd {
-    fn from(args: StdArgs) -> Self {
-        let mut instance = Self::default();
-        instance.args = args;
-        instance
-    }
-}
 impl StdCmd {
     pub fn run(self, rng: &mut ThreadRng) {
-        let args = self.args;
+        let args = self;
         let mode_flags = (args.numeric, args.upper, args.lower, args.special);
         let mut r_str = match args.mode {
             Some(mode) => random_string_mode(rng, &mode, args.length, args.custom),
@@ -85,12 +51,16 @@ impl StdCmd {
     }
 }
 
-
-fn random_string(rng: &mut ThreadRng, len: usize, charset: &str) -> String {
-    let len = if len == 0 { DEFAULT_LEN } else { len };
-    (0..len).map(
-        |_| (charset.as_bytes()[rng.gen_range(0..charset.len())] as char).to_string()
-    ).collect::<Vec<_>>().concat().to_owned()
+#[derive(Debug, Clone, PartialEq, PartialOrd, ValueEnum)]
+pub enum Mode {
+    Num,
+    Lower,
+    Upper,
+    Special,
+    Alpha,
+    Alnum,
+    All,
+    Uuid,
 }
 
 pub fn random_string_mode(rng: &mut ThreadRng, mode: &Mode, len: usize, custom_dist: Option<String>) -> String {
@@ -120,4 +90,10 @@ pub fn random_string_flags(rng: &mut ThreadRng, mode_flags: ModeFlags, len: usiz
     });
 
     random_string(rng, len, &charset)
+}
+
+fn random_string(rng: &mut ThreadRng, len: usize, charset: &str) -> String {
+    (0..len).map(
+        |_| (charset.as_bytes()[rng.gen_range(0..charset.len())] as char).to_string()
+    ).collect::<Vec<_>>().concat().to_owned()
 }

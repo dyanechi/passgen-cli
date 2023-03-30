@@ -1,4 +1,4 @@
-# passgen-cli - rust-based cli password generator
+# passgen-cli - Rust Cli Password Generator
 
 ## Installation
 
