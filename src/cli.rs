@@ -46,10 +46,7 @@ impl Cli {
 #[derive(Args, Clone, Debug, Default)]
 pub struct CliArgs {
     #[clap(flatten)]
-    std_args: Option<StdArgs>,
-
-    #[clap(flatten)]
-    shared_args: SharedArgs,
+    std_args: StdArgs,
 }
 
 #[derive(Subcommand, Clone, Debug)]
