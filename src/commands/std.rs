@@ -28,9 +28,6 @@ pub struct StdArgs {
     #[arg(short='L', long, default_value_t = 16)]
     length: usize,
 
-    #[arg(short='Q', long, default_value_t = 1)]
-    quantity: usize,
-
     #[arg(short, long, value_enum, default_value = None)]
     mode: Option<Mode>,
 
@@ -73,9 +70,9 @@ impl From<StdArgs> for StdCmd {
     }
 }
 impl StdCmd {
-    pub fn run(self, rng: &mut ThreadRng) {
+    pub fn run(self, shared: SharedArgs, rng: &mut ThreadRng) {
         let args = self.args;
-        for _ in 0..args.quantity {
+        for _ in 0..shared.quantity {
             let mode_flags = (args.numeric, args.upper, args.lower, args.special);
             let mut r_str = match args.mode {
                 Some(mode) => random_string_mode(rng, &mode, args.length, args.custom.clone()),

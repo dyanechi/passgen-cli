@@ -1,6 +1,8 @@
+use crate::RunCommand;
+
 use super::prelude::*;
 
-use clap::{Parser, Args, Subcommand, ValueEnum};
+use clap::{Parser, Args, Subcommand};
 use rand::thread_rng;
 
 
@@ -26,17 +28,19 @@ impl Cli {
         let mut rng = thread_rng();
     
         let args = cli.args;
+        let shared = args.shared_args;
         let commands = match cli.commands {
             Some(commands) => commands,
             None => CliCommands::Standard(StdCmd::from(args.std_args)),
         };
     
         match commands {
-            CliCommands::Standard(cmd) => cmd.run(&mut rng),
-            CliCommands::Uuid(cmd) => cmd.run(),
-            CliCommands::Hash(cmd) => cmd.run(),
-            CliCommands::Custom(cmd) => cmd.run(),
+            CliCommands::Standard(cmd) => cmd.run(shared, &mut rng),
+            CliCommands::Uuid(cmd) => cmd.run(shared),
+            CliCommands::Hash(cmd) => cmd.run(shared),
+            CliCommands::Custom(cmd) => cmd.run(shared),
         }
+
     }
 }
 
@@ -44,6 +48,9 @@ impl Cli {
 pub struct CliArgs {
     #[clap(flatten)]
     std_args: Option<StdArgs>,
+
+    #[clap(flatten)]
+    shared_args: SharedArgs,
 }
 
 #[derive(Subcommand, Clone, Debug)]
@@ -52,4 +59,10 @@ enum CliCommands {
     Uuid(UuidCmd),
     Hash(HashCmd),
     Custom(CustomCmd),
+}
+
+#[derive(Args, Clone, Debug, Default)]
+pub struct SharedArgs {
+    #[arg(short='Q', long, default_value_t = 1)]
+    pub quantity: usize,
 }

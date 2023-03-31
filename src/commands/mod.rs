@@ -1,4 +1,5 @@
 use clap::{Args, ValueEnum};
+use crate::SharedArgs;
 
 pub mod custom;
 pub mod hash;

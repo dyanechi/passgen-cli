@@ -13,7 +13,7 @@ pub struct HashCmd {
     args: HashArgs,
 }
 impl HashCmd {
-    pub fn run(self) {
+    pub fn run(self, shared: SharedArgs) {
         let args = self.args;
     }
 }

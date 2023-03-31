@@ -15,10 +15,10 @@ pub struct UuidCmd {
     pub args: UuidArgs,
 }
 impl UuidCmd {
-    pub fn run(self) {
+    pub fn run(self, shared: SharedArgs) {
         let args = self.args;
         let version = self.version.unwrap_or_default();
-        (0..args.quantity).for_each(|_| 
+        (0..shared.quantity).for_each(|_| 
             println!("{}", random_uuid(&version))
         );
     }
@@ -26,8 +26,8 @@ impl UuidCmd {
 
 #[derive(Args, Clone, Debug)]
 pub struct UuidArgs {
-    #[arg(short='Q', long, default_value_t = 1)]
-    pub quantity: usize,
+    // #[arg(short='Q', long, default_value_t = 1)]
+    // pub quantity: usize,
 }
 
 // #[derive(Debug, Default, Clone, PartialEq, PartialOrd, ValueEnum)]
