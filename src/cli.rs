@@ -1,7 +1,8 @@
+use super::prelude::*;
+
 use clap::{Parser, Args, Subcommand, ValueEnum};
 use rand::thread_rng;
 
-use crate::{commands::{uuid::{UuidCommand, random_uuid}, hash::HashCmd, std::StdArgs}, UuidCmd, StdCmd, CustomCmd};
 
 #[derive(Parser, Debug)]
 #[command(
