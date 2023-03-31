@@ -28,17 +28,16 @@ impl Cli {
         let mut rng = thread_rng();
     
         let args = cli.args;
-        let shared = args.shared_args;
         let commands = match cli.commands {
             Some(commands) => commands,
             None => CliCommands::Standard(StdCmd::from(args.std_args)),
         };
     
         match commands {
-            CliCommands::Standard(cmd) => cmd.run(shared, &mut rng),
-            CliCommands::Uuid(cmd) => cmd.run(shared),
-            CliCommands::Hash(cmd) => cmd.run(shared),
-            CliCommands::Custom(cmd) => cmd.run(shared),
+            CliCommands::Standard(cmd) => cmd.run(&mut rng),
+            CliCommands::Uuid(cmd) => cmd.run(),
+            CliCommands::Hash(cmd) => cmd.run(),
+            CliCommands::Custom(cmd) => cmd.run(),
         }
 
     }

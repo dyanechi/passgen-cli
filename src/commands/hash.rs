@@ -4,6 +4,9 @@ use super::*;
 pub struct HashArgs {
     #[arg(short, long)]
     func: Option<HashFunction>,
+
+    #[clap(flatten)]
+    pub shared: SharedArgs,
 }
 
 #[derive(Args, Clone, Debug)]
@@ -13,7 +16,7 @@ pub struct HashCmd {
     args: HashArgs,
 }
 impl HashCmd {
-    pub fn run(self, shared: SharedArgs) {
+    pub fn run(self) {
         let args = self.args;
     }
 }

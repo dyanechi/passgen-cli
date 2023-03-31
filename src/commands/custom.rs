@@ -2,7 +2,8 @@ use super::*;
 
 #[derive(Args, Clone, Debug)]
 pub struct CustomArgs {
-
+    #[clap(flatten)]
+    pub shared: SharedArgs,
 }
 
 #[derive(Args, Clone, Debug)]
@@ -11,7 +12,7 @@ pub struct CustomCmd {
     args: CustomArgs,
 }
 impl CustomCmd {
-    pub fn run(self, shared: SharedArgs) {
+    pub fn run(self) {
         let args = self.args;
     }
 }
