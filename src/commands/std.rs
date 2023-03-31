@@ -11,7 +11,7 @@ const ALPHANUMERIC: &'static str = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGH
 
 const DEFAULT_LEN: usize = 16;
 
-#[derive(Debug, Clone, PartialEq, PartialOrd, ValueEnum)]
+#[derive(Debug, Clone, Copy, PartialEq, PartialOrd, ValueEnum)]
 pub enum Mode {
     Num,
     Lower,
@@ -27,6 +27,9 @@ pub enum Mode {
 pub struct StdArgs {
     #[arg(short='L', long, default_value_t = 16)]
     length: usize,
+
+    #[arg(short='Q', long, default_value_t = 1)]
+    quantity: usize,
 
     #[arg(short, long, value_enum, default_value = None)]
     mode: Option<Mode>,
@@ -72,16 +75,18 @@ impl From<StdArgs> for StdCmd {
 impl StdCmd {
     pub fn run(self, rng: &mut ThreadRng) {
         let args = self.args;
-        let mode_flags = (args.numeric, args.upper, args.lower, args.special);
-        let mut r_str = match args.mode {
-            Some(mode) => random_string_mode(rng, &mode, args.length, args.custom),
-            None => random_string_flags(rng, mode_flags, args.length, args.custom)
-        };
-    
-        if let Some(pre) = &args.pre { r_str = pre.to_owned() + &r_str; }
-        if let Some(post) = &args.post { r_str.push_str(post); }
-    
-        println!("{}", r_str);
+        for _ in 0..args.quantity {
+            let mode_flags = (args.numeric, args.upper, args.lower, args.special);
+            let mut r_str = match args.mode {
+                Some(mode) => random_string_mode(rng, &mode, args.length, args.custom.clone()),
+                None => random_string_flags(rng, mode_flags, args.length, args.custom.clone())
+            };
+        
+            if let Some(pre) = &args.pre { r_str = pre.to_owned() + &r_str; }
+            if let Some(post) = &args.post { r_str.push_str(post); }
+        
+            println!("{}", r_str);
+        }
     }
 }
 
