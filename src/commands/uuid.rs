@@ -7,9 +7,8 @@ use uuid::Uuid;
 
 #[derive(Args, Clone, Debug)]
 pub struct UuidCmd {
-    // #[arg(short='V', long, value_enum, default_value = "v4")]
     #[command(subcommand)]
-    pub version: Option<UuidCommand>,
+    pub version: UuidCommand,
 
     #[clap(flatten)]
     pub args: UuidArgs,
@@ -17,7 +16,7 @@ pub struct UuidCmd {
 impl UuidCmd {
     pub fn run(self) {
         let args = self.args;
-        let version = self.version.unwrap_or_default();
+        let version = self.version;
         (0..args.shared.quantity).for_each(|_| 
             println!("{}", random_uuid(&version))
         );
@@ -28,21 +27,7 @@ impl UuidCmd {
 pub struct UuidArgs {
     #[clap(flatten)]
     pub shared: SharedArgs,
-    // #[arg(short='Q', long, default_value_t = 1)]
-    // pub quantity: usize,
 }
-
-// #[derive(Debug, Default, Clone, PartialEq, PartialOrd, ValueEnum)]
-// pub enum UuidVersion {
-//     V1,
-//     V3,
-//     #[default]
-//     V4,
-//     V5,
-//     V6,
-//     V7,
-//     V8,
-// }
 
 #[derive(Debug, Default, Clone, Subcommand)]
 pub enum UuidCommand {

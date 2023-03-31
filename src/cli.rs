@@ -1,5 +1,3 @@
-use crate::RunCommand;
-
 use super::prelude::*;
 
 use clap::{Parser, Args, Subcommand};
@@ -20,7 +18,7 @@ pub struct Cli {
     args: CliArgs,
 
     #[command(subcommand)]
-    commands: Option<CliCommands>
+    command: Option<CliCommand>
 }
 impl Cli {
     pub fn run() {
@@ -28,16 +26,16 @@ impl Cli {
         let mut rng = thread_rng();
     
         let args = cli.args;
-        let commands = match cli.commands {
-            Some(commands) => commands,
-            None => CliCommands::Standard(StdCmd::from(args.std_args)),
+        let command = match cli.command {
+            Some(command) => command,
+            None => CliCommand::Standard(StdCmd::from(args.std_args)),
         };
     
-        match commands {
-            CliCommands::Standard(cmd) => cmd.run(&mut rng),
-            CliCommands::Uuid(cmd) => cmd.run(),
-            CliCommands::Hash(cmd) => cmd.run(),
-            CliCommands::Custom(cmd) => cmd.run(),
+        match command {
+            CliCommand::Standard(cmd) => cmd.run(&mut rng),
+            CliCommand::Uuid(cmd) => cmd.run(),
+            CliCommand::Hash(cmd) => cmd.run(),
+            CliCommand::Custom(cmd) => cmd.run(),
         }
 
     }
@@ -50,7 +48,7 @@ pub struct CliArgs {
 }
 
 #[derive(Subcommand, Clone, Debug)]
-enum CliCommands {
+enum CliCommand {
     Standard(StdCmd),
     Uuid(UuidCmd),
     Hash(HashCmd),

@@ -18,6 +18,8 @@ pub struct HashCmd {
 impl HashCmd {
     pub fn run(self) {
         let args = self.args;
+
+        eprintln!("Warn: Not implemented yet!");
     }
 }
 

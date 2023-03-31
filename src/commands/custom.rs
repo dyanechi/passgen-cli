@@ -14,5 +14,7 @@ pub struct CustomCmd {
 impl CustomCmd {
     pub fn run(self) {
         let args = self.args;
+
+        eprintln!("Warn: Not implemented yet!");
     }
 }
