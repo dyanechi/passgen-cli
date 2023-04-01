@@ -1,8 +1,14 @@
 use clap::{Args, ValueEnum};
 use crate::SharedArgs;
 
-pub mod custom;
-pub mod hash;
-pub mod std;
-pub mod uuid;
+mod custom;
+mod hash;
+mod std;
+mod uuid;
 
+pub use {
+    self::std::{StdCmd, StdArgs},
+    self::uuid::{UuidCmd, UuidArgs},
+    self::hash::{HashCmd, HashArgs},
+    self::custom::{CustomCmd, CustomArgs},
+};

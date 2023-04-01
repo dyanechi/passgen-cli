@@ -1,4 +1,4 @@
-use passgen_cli::Cli;
+use rpg::Cli;
 
 fn main() {
     Cli::run();
