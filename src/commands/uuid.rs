@@ -60,6 +60,9 @@ pub fn random_uuid(uuid_ver: &UuidCommand) -> String {
     match uuid_ver {
         UuidCommand::V4 => Uuid::new_v4().to_string(),
         UuidCommand::V5(args) => Uuid::new_v5(&Uuid::NAMESPACE_DNS, args.domain.as_bytes()).to_string(),
+        // UuidCommand::V6 => ,
+        // UuidCommand::V7 => fallback_uuid(),
+        // UuidCommand::V8 => fallback_uuid(),
     }
 }
 

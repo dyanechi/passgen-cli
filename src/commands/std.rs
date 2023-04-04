@@ -1,8 +1,6 @@
 use super::*;
 use rand::{Rng, rngs::ThreadRng};
 
-type ModeFlags = (bool, bool, bool, bool);
-
 const BINARY: &'static str = "01";
 const OCTAL: &'static str = "01234567";
 const NUMERIC: &'static str = "0123456789";
@@ -45,6 +43,7 @@ impl DistSetFlags {
     pub fn with_octal(mut self) -> Self { self.octal = true; self }
     pub fn with_binary(mut self) -> Self { self.binary = true; self }
     pub fn with_custom(mut self, custom: Option<String>) -> Self { self.custom = custom.unwrap_or_default(); self }
+    pub fn with_custom_str(mut self, custom: &str) -> Self { self.custom = custom.to_string(); self }
 
     pub fn charset(&self) -> String {
         let mut charset = String::new();
@@ -103,7 +102,7 @@ pub struct StdArgs {
     #[arg(short='L', long, default_value_t = 16)]
     length: usize,
 
-    #[arg(short, long, value_enum, default_value = None)]
+    #[arg(short='M', long, value_enum, default_value = None)]
     mode: Option<Mode>,
 
     #[arg(long)]

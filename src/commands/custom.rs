@@ -2,7 +2,7 @@ use ::std::collections::HashMap;
 
 use regex::Regex;
 
-use crate::commands::std::{random_string_flags, DistSetFlags};
+use crate::{commands::std::{random_string_flags, DistSetFlags}, util::rand_number};
 
 use super::*;
 
@@ -26,44 +26,44 @@ impl CustomCmd {
         let pat = args.pattern.clone();
         if pat.is_empty() { panic!("Pattern must not be empty") }
 
-        let parsed = parse(&pat.trim());
+        let parsed = rand_from_pattern(&pat.trim());
 
         println!("{}", parsed);
     }
 }
 
-fn parse(pat: &str) -> String {
-    const TOKEN_PATTERN: &'static str = r"(((N)?(U)?(L)?(S)?(H)?(O)?(B)?):([0-9]*))";
+pub fn rand_from_pattern(pat: &str) -> String {
+    const TOKEN_PATTERN: &'static str = r"\$\{(((N)?(U)?(L)?(S)?(H)?(O)?(B)?(A)?):(([0-9]*)(-([0-9]*))?))\}";
     let mut rng = rand::thread_rng();
     let mut parsed_result = pat.to_string();
 
     let re = Regex::new(TOKEN_PATTERN).unwrap();
     let matches = re.captures_iter(pat);
 
-    let mut replacers: HashMap<String, String> = HashMap::new();
     for mat in matches {
         // Extract flags and length of random characters to fill
         // println!("{:#?}", mat);
-        let repl_pat = mat[1].to_owned();
+        let repl_pat = mat[0].to_owned();
         if repl_pat.is_empty() { continue; }
         
         let user_flags = mat[2].to_owned();
-        let quantity: usize = mat[mat.len()-1].to_owned().parse().unwrap_or_default();
-        if quantity == 0 {
+        let min: usize = mat.get(mat.len()-3).expect("should have minimum").as_str().parse().unwrap_or_default();
+        if min <= 0 {
             panic!("ERROR: No quantity provided in pattern '{repl_pat}'. Use format 'FLAGS:UINT' instead.\nExample: 'NU:12' - generates 12 characters NUM+UPPER (W0M5DZ44YSFV)");
+        }
+
+        let mut quantity = min;
+        if let Some(max) = mat.get(mat.len()-1) {
+            let max = max.as_str().parse().unwrap_or_default();
+            if max <= min { panic!("ERROR: max should be higher than min") }
+            quantity = rand_number(&mut rng, min, max);
         }
 
         // Fill in the flags
         let flags = DistSetFlags::from(&user_flags);
-        replacers.insert(repl_pat, random_string_flags(&mut rng, flags, quantity, None));
-    }
+        let value = random_string_flags(&mut rng, flags, quantity, None);
 
-    if replacers.len() == 0 {
-        eprintln!("WARN: Pattern didn't contain anything to generate.");
-    }
-
-    for (k, v) in replacers.iter() {
-        parsed_result = parsed_result.replace(k, v);
+        parsed_result = parsed_result.replacen(&repl_pat, &value, 1);
     }
 
     parsed_result

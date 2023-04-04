@@ -1,0 +1,15 @@
+[package]
+name = "expanders"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate_type = ["proc-macro"]
+proc-macro = true
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+proc-macro2 = "1.0.56"
+quote = "1.0.26"
+syn = { version = "2.0.13", features = ["full"]}

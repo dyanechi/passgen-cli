@@ -5,6 +5,7 @@ mod custom;
 mod hash;
 mod std;
 mod uuid;
+mod patterns;
 
 pub use {
     self::std::{StdCmd, StdArgs},
